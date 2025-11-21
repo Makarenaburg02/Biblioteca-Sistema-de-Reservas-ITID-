@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reservas Salas - ITID</title>
+</head>
+<body>
+
+    <h1>"Biblioteca del Instituto Tecnológico de Innovación Digital (ITID)"</h1>
+
+    <h2>Realizar Reserva</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div>
+            <label>RUT:</label>
+            <br>
+            <input type="text" name="rut_u" placeholder="Ej: 12.345.678-9" required>
+        </div>
+        
+        <br>
+        
+        <div>
+            <label>Sala:</label>
+            <br>
+            <select name="sala_id">
+                <option value="">-- Seleccionar Sala --</option>
+                {% for sala in salas %}
+                    {% if sala.disponible %}
+                        <option value="{{ sala.id }}">
+                            {{ sala.nombre }} - Capacidad: {{ sala.capacidad }}
+                        </option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        
+        <br>
+        
+        <div>
+            <button type="submit">Reservar Sala (2 horas)</button>
+        </div>
+    </form>
+
+    <br>
+    <br>
+
+    <h2>Lista de Salas</h2>
+    
+    {% for sala in salas %}
+    <div style="margin: 20px 0; padding: 15px; border: 1px solid #ccc;">
+        <h3>{{ sala.nombre }}</h3>
+        
+        <p><strong>Capacidad:</strong> {{ sala.capacidad }} personas</p>
+        
+        <p><strong>Disponibilidad:</strong> 
+            {% if sala.disponible %}
+                Disponible
+            {% else %}
+                Reservada
+            {% endif %}
+        </p>
+        
+        <p>
+            <a href="{% url 'detalle_sala' sala.id %}">
+                Ver detalle de esta sala
+            </a>
+        </p>
+    </div>
+    {% endfor %}
+
+</body>
+</html>
